@@ -4,3 +4,4 @@ bin
 /paket-files/
 /packages/
 /.paket/paket
+/.paket/paket.exe
