@@ -5,3 +5,4 @@ bin
 /packages/
 /.paket/paket
 /.paket/paket.exe
+/.paket/Paket.Restore.targets
