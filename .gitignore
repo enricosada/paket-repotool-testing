@@ -1,0 +1,6 @@
+obj
+bin
+/.paket/paket.cmd
+/paket-files/
+/packages/
+/.paket/paket
