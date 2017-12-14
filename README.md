@@ -15,8 +15,9 @@ as a note, both can be run with just `paket` if that directory is in `PATH`
 .paket\paket restore -v
 ```
 
-To build it, as usual
+Now the dir `paket-files\paket\bin` is in `PATH`
+so is possible to run installed commands, like
 
 ```bat
-dotnet build c1 -v n
+hello
 ```
