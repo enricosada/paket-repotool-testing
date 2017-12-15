@@ -1,0 +1,2 @@
+# shell script will have LF line endings on checkout.
+/paket-files/paket/bin/hello text eol=lf
