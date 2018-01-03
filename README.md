@@ -63,6 +63,7 @@ paket after `install` or `restore` will create some shell script in `paket-files
 - [ ] use native wrappers instead of shell scripts
 - [ ] kill the child tool it if parent process (the script) is termined
 - [ ] discover .net core tools based on [PE header magic string](https://github.com/file/file/blob/3490b71f5cd8548d64ea452703ba4f2a160b73f0/magic/Magdir/msdos#L72)
+- [ ] `paket add-tool FSharp.Compiler.Tools` (like `add` command) to add as `repotool` in deps, and install it now
 
 ## Examples
 
