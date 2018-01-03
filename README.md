@@ -13,7 +13,7 @@ SPEC:
 
 - A nupkg who is a repo tools, just need to add console app in `tools` directory.
 - can support multiple runtimes in same nupkg
-  - .net framework console app (require .NET Framework or mono installed)
+  - .net framework console app (require .NET Framework or `mono` installed)
   - .net core console app published as FDD (require .net core runtime installed)
 
 PAKET BEHAVIOUR:
@@ -58,6 +58,7 @@ paket after `install` or `restore` will create some shell script in `paket-files
 
 ## RAW ideas
 
+- [ ] `paket run mytool` (npm-like) or `paket mytool` (dotnetcli like) or `paket exec mytool` (bundler like) who will  just invoke `paket-files\bin\mytool`
 - [ ] use native wrappers instead of shell scripts
 - [ ] kill the child tool it if parent process (the script) is termined
 
@@ -127,7 +128,7 @@ paket-files\bin\myhello
 
 in the example, the `myhello` tool will now use .net core.
 
-if you cat the `paket-files\bin\mytool.sh` will be:
+if you cat the `paket-files\bin\mytool.cmd` will be:
 
 ```bat
 dotnet "%~dp0..\..\packages\myhello\tools\netcoreapp2.0\myhello.dll" %*
@@ -138,6 +139,8 @@ normally is:
 ```bat
 "%~dp0..\..\packages\myhello\tools\net45\myhello.exe" %*
 ```
+
+same for the `.sh`
 
 run as `dotnet` will respect the `global.json` file, if exist
 
