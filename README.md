@@ -1,3 +1,5 @@
+this is the WIP of the PR https://github.com/fsprojects/Paket/pull/2938
+
 # How works
 
 The repo tools are declared in the `paket.dependencies` as `repotool`, like
