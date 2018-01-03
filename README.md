@@ -57,6 +57,7 @@ paket after `install` or `restore` will create some shell script in `paket-files
 - [ ] warning if the prefferred runtime is not supported on restore by a tool
 - [ ] powershell helper script to change `$env:PATH`
 - [ ] discover .net core tools based on `mytool.deps.json` file
+- [ ] search the nupkg for tool at `install` step, write relative path found in `paket.lock`. at `restore` step, just write down the wrappers
 
 ## RAW ideas
 
