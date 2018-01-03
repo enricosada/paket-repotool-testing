@@ -51,16 +51,18 @@ paket after `install` or `restore` will create some shell script in `paket-files
 
 ## KNOWN BUGS or NOT IMPLEMENTED YET
 
-- [ ] configure alias, especially for .net core tools
 - [ ] chmod+x for shell scripts
 - [ ] warning if the prefferred runtime is not supported on restore by a tool
 - [ ] powershell helper script to change `$env:PATH`
+- [ ] discover .net core tools based on `mytool.deps.json` file
+- [ ] configure alias, especially for .net core tools
 
 ## RAW ideas
 
 - [ ] `paket run mytool` (npm-like) or `paket mytool` (dotnetcli like) or `paket exec mytool` (bundler like) who will  just invoke `paket-files\bin\mytool`
 - [ ] use native wrappers instead of shell scripts
 - [ ] kill the child tool it if parent process (the script) is termined
+- [ ] discover .net core tools based on [PE header magic string](https://github.com/file/file/blob/3490b71f5cd8548d64ea452703ba4f2a160b73f0/magic/Magdir/msdos#L72)
 
 ## Examples
 
