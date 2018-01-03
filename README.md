@@ -104,7 +104,7 @@ same as example 1
 paket-files\bin\myhello a b c
 ```
 
-### 3 - Multi runtimes
+### 3 - Multi runtimes (.net core and .net)
 
 A repo tools can support multiple runtime. so both .net core and .net.
 
