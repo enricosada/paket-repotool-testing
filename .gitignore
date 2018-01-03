@@ -1,8 +1,5 @@
 obj
 bin
-/.paket/paket.cmd
 /paket-files/
 /packages/
-/.paket/paket
-/.paket/paket.exe
 /.paket/Paket.Restore.targets
