@@ -3,3 +3,4 @@ bin
 /paket-files/
 /packages/
 /.paket/Paket.Restore.targets
+/paket.lock
