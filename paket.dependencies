@@ -4,3 +4,4 @@ source https://www.myget.org/F/paket-repotool/api/v2
 repotool myhello 0.4.0
 repotool RepoTool.Sample 0.3.0
 repotool FAKE 4.64.3
+repotool FSharp.Compiler.Tools 4.1

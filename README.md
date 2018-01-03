@@ -162,8 +162,8 @@ and run the commands
 
 ```
 FAKE --version
-hello 1 2 3
-myhello a b c
+fsc --help
+fsi --help
 ```
 
 The working directory doesnt matter anymore
@@ -173,6 +173,8 @@ mkdir prova
 cd prova
 myhello
 ```
+
+and `where fsi`
 
 ### 5 - change the PATH is annoying, use the helper script
 
@@ -189,6 +191,10 @@ so now
 
 ```
 FAKE --version
+fsc --help
+fsi --help
 ```
 
 works, same as example 4
+
+a scenario good to later set `FscToolPath`/`FscToolExe` to configure the msbuild compilation
