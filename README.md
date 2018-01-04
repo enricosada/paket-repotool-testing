@@ -53,6 +53,8 @@ paket after `install` or `restore` will create some shell script in `paket-files
 
 ## KNOWN BUGS or NOT IMPLEMENTED YET
 
+the [X] are fixed
+
 - [X] chmod+x for shell scripts
 - [ ] warning if the prefferred runtime is not supported on restore by a tool
 - [X] powershell helper script to change `$env:PATH`
@@ -62,13 +64,13 @@ paket after `install` or `restore` will create some shell script in `paket-files
 
 ## RAW ideas
 
-- [ ] `paket add-tool FSharp.Compiler.Tools` (like `add` command) to add as `repotool` in deps, and install it now
-- [ ] use native wrappers instead of shell scripts
-- [ ] `paket run mytool` (npm-like) or `paket mytool` (dotnetcli like) or `paket exec mytool` (bundler like) who will  just invoke `paket-files\bin\mytool`. ask to install if not already installed
-- [ ] kill the child tool it if parent process (the script) is termined
-- [ ] discover .net core tools based on [PE header magic string](https://github.com/file/file/blob/3490b71f5cd8548d64ea452703ba4f2a160b73f0/magic/Magdir/msdos#L72)
-- [ ] configure alias, especially for .net core tools
-- [ ] support native binaries, or .net with a target os/runtimes (for native dll)
+- `paket add-tool FSharp.Compiler.Tools` (like `add` command) to add as `repotool` in deps, and install it now
+- use native wrappers instead of shell scripts
+- `paket run mytool` (npm-like) or `paket mytool` (dotnetcli like) or `paket exec mytool` (bundler like) who will  just invoke `paket-files\bin\mytool`. ask to install if not already installed
+- kill the child tool it if parent process (the script) is termined
+- discover .net core tools based on [PE header magic string](https://github.com/file/file/blob/3490b71f5cd8548d64ea452703ba4f2a160b73f0/magic/Magdir/msdos#L72)
+- configure alias, especially for .net core tools
+- support native binaries, or .net with a target os/runtimes (for native dll)
 
 ## Examples
 
