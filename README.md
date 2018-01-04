@@ -53,9 +53,9 @@ paket after `install` or `restore` will create some shell script in `paket-files
 
 ## KNOWN BUGS or NOT IMPLEMENTED YET
 
-- [ ] chmod+x for shell scripts
+- [X] chmod+x for shell scripts
 - [ ] warning if the prefferred runtime is not supported on restore by a tool
-- [ ] powershell helper script to change `$env:PATH`
+- [X] powershell helper script to change `$env:PATH`
 - [ ] discover .net core tools based on `mytool.deps.json` file
 - [ ] search the nupkg for tool at `install` step, write relative path found in `paket.lock`. at `restore` step, just write down the wrappers
 - [ ] shell scripts don't work on git-bash on windows, because try to run mono. check `ComSpec` env var if is win (ref [so](https://stackoverflow.com/a/18790824/))
