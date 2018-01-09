@@ -1,5 +1,35 @@
 this is the WIP of the PR https://github.com/fsprojects/Paket/pull/2938
 
+# Why
+
+We need console app for lots of reason (fake, fsc, nunit-console, etc).
+
+Repo tools summary:
+
+- discovery and install from nupkg, written in `paket.dependencies` as `repotool MyTool`
+- are versioned in repository. usual `paket.lock` benefits, like reproducible build
+  - no global install or per machine or per user. per repository
+- fixed install location for easier build orchestration
+- works multi os (unix/win/mac)
+  - works in win+WSL. no need to redo restore, both scripts for win and linux exists and wors
+- tools can be targeting .net and/or .net core (multiple fw supported in same nupkg)
+- helper scripts for dev flow
+  - user can choose the preferred .net runtime use for tools
+- compatibile with old nupkg with .net exe in `tools` directory
+
+# Comparison
+
+| Type                    | .NET | .NET Core | Run in any dir | Per user (global) | Per repo | Per .csprj/.fsproj | Xplat |
+|-------------------------|------|-----------|----------------|-------------------|----------|--------------------|---|
+| Repo tools              |   X  |     X     |         X      |                   |     X    |                    | X |
+| Dotnet cli tool         |      |     X     |                |                   |          |          X         | X |
+| Dotnet cli global tools |      |     X     |         X      |        X          |          |                    | X |
+| console in tools dir of nupkg | X |  | X | | X | | |
+
+NOTE Dotnet cli global tools are wip in .net core sdk 2.2 so may change. Repo tools will allow to consume these packages too
+NOTE The dotnet cli tool require the working directory to be the same of the project where is specified (the .csproj/.fsproj)
+NOTE the Xplat mean the same invocation string can be used for all os in shell (no need to think about mono on osx/unix for example)
+
 # How works
 
 The repo tools are declared in the `paket.dependencies` as `repotool`, like
@@ -78,9 +108,9 @@ the [X] are fixed
 
 ## Examples
 
-**NOTE** Each example assume a clean repo, so feel free to `git clean -xdf` at start
+**NOTE** Each example assume a clean repo, so feel free to `git clean -xdf` at start of each example
 
-Examples use windows dir separator, sry, but fixing that should works on unix or windows WLS
+Examples use windows dir separator, sry, but fixing that should works on unix or windows WSL
 
 ### 1 - Basic example, from install
 
@@ -148,13 +178,13 @@ if you cat the `paket-files\bin\mytool.cmd` will be:
 dotnet "%~dp0..\..\packages\myhello\tools\netcoreapp2.0\myhello.dll" %*
 ```
 
-normally is:
+btw normally (the default is .NET) is:
 
 ```bat
 "%~dp0..\..\packages\myhello\tools\net45\myhello.exe" %*
 ```
 
-same for the `.sh`
+Same for the `.sh`
 
 NOTE the `hello`, contained in `RepoTool.Sample` nupkg, doesnt have same name of pkg
 
