@@ -23,7 +23,7 @@ Some are needed by build (`nunit-console`, `ilrepack`) or for both (`fake`, `dot
 
 While the former (dev tools) MAY not need to be versioned with codebase, the latter (for build, for both) should be to make build reproducible.
 
-**Tools should be easy to install, good developer UX, run from script, multi os and runtimes, versioned with repo (if needed).**
+**Tools should be easy to install, nice developer UX from cli, easy runnable from shell scripts, multi os and runtimes, versioned with repo (if needed), can be invoked by any third party tooling.**
 
 Repo tools features:
 
