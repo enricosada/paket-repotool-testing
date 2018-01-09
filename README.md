@@ -47,7 +47,9 @@ Just .NET Framework and .NET Core console app are supported (atm)
 - any `tools/netcoreapp{version}/{pkgName}.dll` is considered a .NET Core console app.
     - see `myhello` nupkg as example
     - the console app must be an FDD, so require .net core runtime installed
-    - no way to specify an alias (yet), the name of entry point assembly should be the same of nupkg
+- any `tools/netcoreapp{version}/{name}.dll` with a `{name}.deps.json` is considered a .NET Core console app.
+    - see `RepoTool.Sample` nupkg as example (pkg name is `RepoTool.Sample` but exe is `hello`)
+    - the console app must be an FDD, so require .net core runtime installed
 
 paket after `install` or `restore` will create some shell script in `paket-files\bin` to invoke these tools
 
@@ -58,8 +60,8 @@ the [X] are fixed
 - [X] chmod+x for shell scripts
 - [ ] warning if the prefferred runtime is not supported on restore by a tool
 - [X] powershell helper script to change `$env:PATH`
-- [ ] discover .net core tools based on `mytool.deps.json` file
-- [ ] search the nupkg for tool at `install` step, write relative path found in `paket.lock`. at `restore` step, just write down the wrappers
+- [X] discover .net core tools based on `mytool.deps.json` file
+- ~search the nupkg for tool at `install` step, write relative path found in `paket.lock`. at `restore` step, just write down the wrappers~ no need, assume strategy is stable.
 - [ ] shell scripts don't work on git-bash on windows, because try to run mono. check `ComSpec` env var if is win (ref [so](https://stackoverflow.com/a/18790824/))
 
 ## RAW ideas
@@ -69,8 +71,10 @@ the [X] are fixed
 - `paket run mytool` (npm-like) or `paket mytool` (dotnetcli like) or `paket exec mytool` (bundler like) who will  just invoke `paket-files\bin\mytool`. ask to install if not already installed
 - kill the child tool it if parent process (the script) is termined
 - discover .net core tools based on [PE header magic string](https://github.com/file/file/blob/3490b71f5cd8548d64ea452703ba4f2a160b73f0/magic/Magdir/msdos#L72)
-- configure alias, especially for .net core tools
+- configure alias, especially for .net core tools.
+- support configuration of alias as metadata of the package, so pkg authors can do that
 - support native binaries, or .net with a target os/runtimes (for native dll)
+- support native binaries splitted in multiple packages (runtimes.json in nupkg?) to minimize donwload size at restore
 
 ## Examples
 
@@ -152,7 +156,10 @@ normally is:
 
 same for the `.sh`
 
-run as `dotnet` will respect the `global.json` file, if exist
+NOTE the `hello`, contained in `RepoTool.Sample` nupkg, doesnt have same name of pkg
+
+NOTE run as `dotnet` will respect the `global.json` file, if exist
+
 
 ### 4 - type full path is annoying, use the PATH
 
@@ -182,11 +189,11 @@ cd prova
 myhello
 ```
 
-and `where fsi`
+and `where fsi` (or `which fsi`)
 
 ### 5 - change the PATH is annoying, use the helper script
 
-manuall change the `PATH` is annoying and error prone.
+manually change the `PATH` is annoying and error prone.
 
 after install/restore, paket generate an helper script (two, by os)
 
