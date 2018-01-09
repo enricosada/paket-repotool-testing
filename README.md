@@ -16,11 +16,16 @@ this is the WIP of the PR https://github.com/fsprojects/Paket/pull/2938
 # Why
 
 We need console app (tools from now on) for lots of reason in development.
-Some are helpers for dev (`dotnet-watch`, `serve`, `forge`, `ildasm`), some are needed by build (`nunit-console`, `ilrepack`), some for both (`fake`, `dotnet-fable`, `dotnet-xunit`)
-While the former (dev tools) MAY not need to be versioned with codebase, the latter (for build, for both) should be to make build reproducible.
-Tools should be easy to install, good developer UX, run from script, multi os and runtimes, versioned with repo.
 
-Repo tools summary:
+Some are helpers for dev (`dotnet-watch`, `serve`, `forge`, `ildasm`).
+
+Some are needed by build (`nunit-console`, `ilrepack`) or for both (`fake`, `dotnet-fable`, `dotnet-xunit`)
+
+While the former (dev tools) MAY not need to be versioned with codebase, the latter (for build, for both) should be to make build reproducible.
+
+**Tools should be easy to install, good developer UX, run from script, multi os and runtimes, versioned with repo (if needed).**
+
+Repo tools features:
 
 - discovery and install from nupkg, written in `paket.dependencies` as `repotool MyTool`
 - are versioned in repository. usual `paket.lock` benefits, like reproducible build
@@ -36,7 +41,7 @@ Repo tools summary:
 <a name="compare"></a>
 # Comparison with existing similar
 
-| Type                    | .NET | .NET Core | Run in any dir | Per user (global) | Per repo | Per .csprj/.fsproj | Xplat |
+| Type                    | .NET | .NET Core | Run in any dir | Per user (global) | Per repo | Per .csprj/.fsproj | Xplat CLI |
 |-------------------------|------|-----------|----------------|-------------------|----------|--------------------|---|
 | Repo tools              |   X  |     X     |         X      |                   |     X    |                    | X |
 | Dotnet cli tool         |      |     X     |                |                   |          |          X         | X |
@@ -45,7 +50,7 @@ Repo tools summary:
 
 NOTE Dotnet cli global tools are wip in .net core sdk 2.2 so may change. Repo tools will allow to consume these packages too
 NOTE The dotnet cli tool require the working directory to be the same of the project where is specified (the .csproj/.fsproj)
-NOTE the Xplat mean the same invocation string can be used for all os in shell (no need to think about mono on osx/unix for example)
+NOTE the `Xplat CLI` mean the same invocation string can be used for all os in shell (no need to think about mono on osx/unix for example)
 
 <a name="how-works"></a>
 # How works
