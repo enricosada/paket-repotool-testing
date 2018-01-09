@@ -11,6 +11,7 @@ this is the WIP of the PR https://github.com/fsprojects/Paket/pull/2938
   - [5 - change the PATH is annoying, use the helper script](#example-use-PATH-with-helper-script)
 - [KNOWN BUGS or NOT IMPLEMENTED YET](#known-bugs)
   - [RAW ideas](#raw-ideas)
+- [How works - more info](#how-works-more-info)
 
 <a name="why"></a>
 # Why
@@ -38,6 +39,35 @@ Repo tools features:
   - user can choose the preferred .net runtime use for tools
 - compatibile with old nupkg with .net exe in `tools` directory
 
+<a name="how-works"></a>
+# How works
+
+The repo tools are declared in the `paket.dependencies` as `repotool`, like
+
+```
+repotool myhello 0.4.0
+```
+
+These works like normal nupkg for resolution, but are standalone and doesnt contribute to project references. Can be used without project files too.
+
+The version resolved by `paket install` will be locked (as usual) in `paket.lock`, and that specific version will be used (as usual) by `paket restore`
+
+SPEC:
+
+- A nupkg who is a repo tools, just need to add published console apps in `tools` directory based on runtime.
+- can support multiple runtimes in same nupkg
+  - .net framework console app (require .NET Framework or `mono` installed)
+  - .net core console app published as FDD (require .net core runtime installed)
+- in future, a config file will optionally allow to specify more settings, atm is by convention
+
+PAKET:
+
+- will install and restore the package as usual
+- will create the shell scripts for invocation (both windows batch and unix/mac shell script) in `paket-files/bin` dir
+- will create an helper script `paket-files/bin/add_to_PATH` to improve dev UX
+
+See also [How works - more info](#how-works-more-info)
+
 <a name="compare"></a>
 # Comparison with existing similar
 
@@ -51,60 +81,6 @@ Repo tools features:
 NOTE Dotnet cli global tools are wip in .net core sdk 2.2 so may change. Repo tools will allow to consume these packages too
 NOTE The dotnet cli tool require the working directory to be the same of the project where is specified (the .csproj/.fsproj)
 NOTE the `Xplat CLI` mean the same invocation string can be used for all os in shell (no need to think about mono on osx/unix for example)
-
-<a name="how-works"></a>
-# How works
-
-The repo tools are declared in the `paket.dependencies` as `repotool`, like
-
-```
-repotool myhello 0.4.0
-```
-
-These works like normal nupkg for resolution, but are standalone and doesnt contribute to project references.
-The version resolved by `paket install` will be locked (as usual) in `paket.lock`, and that specific version will be used (as usual) by `paket restore`
-
-SPEC:
-
-- A nupkg who is a repo tools, just need to add console app in `tools` directory.
-- can support multiple runtimes in same nupkg
-  - .net framework console app (require .NET Framework or `mono` installed)
-  - .net core console app published as FDD (require .net core runtime installed)
-
-PAKET BEHAVIOUR:
-
-idea is to have wrapper script in a fixed location to invoke a tool (but each tool can use a different runtime or be in different install location)
-the preferred runtime to use is not locked
-
-- paket install/restore the nupkg as usual (settings for nupkg like storage:none/groups/source/etc apply too)
-- paket after downloading the nupkg (on restore/install) will create some shell scripts to invoke these
-- the shell script, in `paket-files/bin` can be invoked as `paket-files/bin/mytool`:
-    - for win is `mytool.cmd` a normal batch script
-    - for osx/linux is `mytool` a normal shell script
-- the shell script will invoke:
-    - for .net fw console app: `mono mytool.exe` on osx/unix, directly `mytool.exe` on win
-    - for .net core console app: `dotnet mytool.dll`
-- doesnt matter where the packages are restored, if in `packages` dir or in `storage:none` (user nuget cache dir).
-- normally is enough `paket-files/bin/mytool` (with right dir separator) in both windows/unix, if run as shell command
-- adding `paket-files\bin` to `PATH`, the commands can be run as `mytool` directly (without `paket-files/bin` full path)
-- paket will create a helper script to help modify the `PATH` env var:
-  - for win: `paket-files\bin\add_to_PATH`
-  - for unix: `source paket-files/bin/add_to_PATH.sh`
-
-Just .NET Framework and .NET Core console app are supported (atm)
-
-- any `tools/*.exe` is considered a .NET Framework console app.
-    - see `FAKE` nupkg as example (useful for old tools)
-- any `tools/net{version}/*.exe` is considered a .NET Framework console app.
-    - see `RepoTool.Sample` nupkg as example
-- any `tools/netcoreapp{version}/{pkgName}.dll` is considered a .NET Core console app.
-    - see `myhello` nupkg as example
-    - the console app must be an FDD, so require .net core runtime installed
-- any `tools/netcoreapp{version}/{name}.dll` with a `{name}.deps.json` is considered a .NET Core console app.
-    - see `RepoTool.Sample` nupkg as example (pkg name is `RepoTool.Sample` but exe is `hello`)
-    - the console app must be an FDD, so require .net core runtime installed
-
-paket after `install` or `restore` will create some shell script in `paket-files\bin` to invoke these tools
 
 <a name="examples"></a>
 ## Examples
@@ -274,3 +250,39 @@ the [X] are fixed
 - support configuration of alias as metadata of the package, so pkg authors can do that
 - support native binaries, or .net with a target os/runtimes (for native dll)
 - support native binaries splitted in multiple packages (runtimes.json in nupkg?) to minimize donwload size at restore
+
+<a name="how-works-detailed"></a>
+## How works - more info
+
+idea is to have wrapper script in a fixed location to invoke a tool (but each tool can use a different runtime or be in different install location)
+the preferred runtime to use is not locked
+
+- paket install/restore the nupkg as usual (settings for nupkg like storage:none/groups/source/etc apply too)
+- paket after downloading the nupkg (on restore/install) will create some shell scripts to invoke these
+- the shell script, in `paket-files/bin` can be invoked as `paket-files/bin/mytool`:
+    - for win is `mytool.cmd` a normal batch script
+    - for osx/linux is `mytool` a normal shell script
+- the shell script will invoke:
+    - for .net fw console app: `mono mytool.exe` on osx/unix, directly `mytool.exe` on win
+    - for .net core console app: `dotnet mytool.dll`
+- doesnt matter where the packages are restored, if in `packages` dir or in `storage:none` (user nuget cache dir).
+- normally is enough `paket-files/bin/mytool` (with right dir separator) in both windows/unix, if run as shell command
+- adding `paket-files\bin` to `PATH`, the commands can be run as `mytool` directly (without `paket-files/bin` full path)
+- paket will create a helper script to help modify the `PATH` env var:
+  - for win: `paket-files\bin\add_to_PATH`
+  - for unix: `source paket-files/bin/add_to_PATH.sh`
+
+Just .NET Framework and .NET Core console app are supported (atm)
+
+- any `tools/*.exe` is considered a .NET Framework console app.
+    - see `FAKE` nupkg as example (useful for old tools)
+- any `tools/net{version}/*.exe` is considered a .NET Framework console app.
+    - see `RepoTool.Sample` nupkg as example
+- any `tools/netcoreapp{version}/{pkgName}.dll` is considered a .NET Core console app.
+    - see `myhello` nupkg as example
+    - the console app must be an FDD, so require .net core runtime installed
+- any `tools/netcoreapp{version}/{name}.dll` with a `{name}.deps.json` is considered a .NET Core console app.
+    - see `RepoTool.Sample` nupkg as example (pkg name is `RepoTool.Sample` but exe is `hello`)
+    - the console app must be an FDD, so require .net core runtime installed
+
+paket after `install` or `restore` will create some shell script in `paket-files\bin` to invoke these tools
