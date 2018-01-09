@@ -1,8 +1,24 @@
 this is the WIP of the PR https://github.com/fsprojects/Paket/pull/2938
 
+- [Why](#why)
+- [Comparison with existing similar](#compare)
+- [How works](#how-works)
+- [Examples](#examples)
+  - [1 - Basic example, from install](#example-install)
+  - [2 - Basic example, from restore](#example-restore)
+  - [3 - Multi runtimes (.net core and .net)](#example-multiple-runtimes)
+  - [4 - type full path is annoying, use the PATH](#example-use-PATH)
+  - [5 - change the PATH is annoying, use the helper script](#example-use-PATH-with-helper-script)
+- [KNOWN BUGS or NOT IMPLEMENTED YET](#known-bugs)
+  - [RAW ideas](#raw-ideas)
+
+<a name="why"></a>
 # Why
 
-We need console app for lots of reason (fake, fsc, nunit-console, etc).
+We need console app (tools from now on) for lots of reason in development.
+Some are helpers for dev (`dotnet-watch`, `serve`, `forge`, `ildasm`), some are needed by build (`nunit-console`, `ilrepack`), some for both (`fake`, `dotnet-fable`, `dotnet-xunit`)
+While the former (dev tools) MAY not need to be versioned with codebase, the latter (for build, for both) should be to make build reproducible.
+Tools should be easy to install, good developer UX, run from script, multi os and runtimes, versioned with repo.
 
 Repo tools summary:
 
@@ -17,7 +33,8 @@ Repo tools summary:
   - user can choose the preferred .net runtime use for tools
 - compatibile with old nupkg with .net exe in `tools` directory
 
-# Comparison
+<a name="compare"></a>
+# Comparison with existing similar
 
 | Type                    | .NET | .NET Core | Run in any dir | Per user (global) | Per repo | Per .csprj/.fsproj | Xplat |
 |-------------------------|------|-----------|----------------|-------------------|----------|--------------------|---|
@@ -30,6 +47,7 @@ NOTE Dotnet cli global tools are wip in .net core sdk 2.2 so may change. Repo to
 NOTE The dotnet cli tool require the working directory to be the same of the project where is specified (the .csproj/.fsproj)
 NOTE the Xplat mean the same invocation string can be used for all os in shell (no need to think about mono on osx/unix for example)
 
+<a name="how-works"></a>
 # How works
 
 The repo tools are declared in the `paket.dependencies` as `repotool`, like
@@ -83,35 +101,14 @@ Just .NET Framework and .NET Core console app are supported (atm)
 
 paket after `install` or `restore` will create some shell script in `paket-files\bin` to invoke these tools
 
-## KNOWN BUGS or NOT IMPLEMENTED YET
-
-the [X] are fixed
-
-- [X] chmod+x for shell scripts
-- [ ] warning if the prefferred runtime is not supported on restore by a tool
-- [X] powershell helper script to change `$env:PATH`
-- [X] discover .net core tools based on `mytool.deps.json` file
-- ~search the nupkg for tool at `install` step, write relative path found in `paket.lock`. at `restore` step, just write down the wrappers~ no need, assume strategy is stable.
-- [ ] shell scripts don't work on git-bash on windows, because try to run mono. check `ComSpec` env var if is win (ref [so](https://stackoverflow.com/a/18790824/))
-
-## RAW ideas
-
-- `paket add-tool FSharp.Compiler.Tools` (like `add` command) to add as `repotool` in deps, and install it now
-- use native wrappers instead of shell scripts
-- `paket run mytool` (npm-like) or `paket mytool` (dotnetcli like) or `paket exec mytool` (bundler like) who will  just invoke `paket-files\bin\mytool`. ask to install if not already installed
-- kill the child tool it if parent process (the script) is termined
-- discover .net core tools based on [PE header magic string](https://github.com/file/file/blob/3490b71f5cd8548d64ea452703ba4f2a160b73f0/magic/Magdir/msdos#L72)
-- configure alias, especially for .net core tools.
-- support configuration of alias as metadata of the package, so pkg authors can do that
-- support native binaries, or .net with a target os/runtimes (for native dll)
-- support native binaries splitted in multiple packages (runtimes.json in nupkg?) to minimize donwload size at restore
-
+<a name="examples"></a>
 ## Examples
 
 **NOTE** Each example assume a clean repo, so feel free to `git clean -xdf` at start of each example
 
 Examples use windows dir separator, sry, but fixing that should works on unix or windows WSL
 
+<a name="example-install"></a>
 ### 1 - Basic example, from install
 
 ```bat
@@ -131,6 +128,7 @@ paket-files\bin\hello 1 2 3
 paket-files\bin\myhello a b c
 ```
 
+<a name="example-restore"></a>
 ### 2 - Basic example, from restore
 
 do `.paket\paket install`, remove the `paket-files` directory, but leave `paket.lock`
@@ -143,6 +141,7 @@ same as example 1
 paket-files\bin\myhello a b c
 ```
 
+<a name="example-multiple-runtimes"></a>
 ### 3 - Multi runtimes (.net core and .net)
 
 A repo tools can support multiple runtime. so both .net core and .net.
@@ -191,6 +190,7 @@ NOTE the `hello`, contained in `RepoTool.Sample` nupkg, doesnt have same name of
 NOTE run as `dotnet` will respect the `global.json` file, if exist
 
 
+<a name="example-use-PATH"></a>
 ### 4 - type full path is annoying, use the PATH
 
 ```
@@ -221,6 +221,7 @@ myhello
 
 and `where fsi` (or `which fsi`)
 
+<a name="example-use-PATH-with-helper-script"></a>
 ### 5 - change the PATH is annoying, use the helper script
 
 manually change the `PATH` is annoying and error prone.
@@ -243,3 +244,28 @@ fsi --help
 works, same as example 4
 
 a scenario good to later set `FscToolPath`/`FscToolExe` to configure the msbuild compilation
+
+<a name="known-bugs"></a>
+## KNOWN BUGS or NOT IMPLEMENTED YET
+
+the [X] are fixed
+
+- [X] chmod+x for shell scripts
+- [ ] warning if the prefferred runtime is not supported on restore by a tool
+- [X] powershell helper script to change `$env:PATH`
+- [X] discover .net core tools based on `mytool.deps.json` file
+- ~search the nupkg for tool at `install` step, write relative path found in `paket.lock`. at `restore` step, just write down the wrappers~ no need, assume strategy is stable.
+- [ ] shell scripts don't work on git-bash on windows, because try to run mono. check `ComSpec` env var if is win (ref [so](https://stackoverflow.com/a/18790824/))
+
+<a name="raw-ideas"></a>
+## RAW ideas
+
+- `paket add-tool FSharp.Compiler.Tools` (like `add` command) to add as `repotool` in deps, and install it now
+- use native wrappers instead of shell scripts
+- `paket run mytool` (npm-like) or `paket mytool` (dotnetcli like) or `paket exec mytool` (bundler like) who will  just invoke `paket-files\bin\mytool`. ask to install if not already installed
+- kill the child tool it if parent process (the script) is termined
+- discover .net core tools based on [PE header magic string](https://github.com/file/file/blob/3490b71f5cd8548d64ea452703ba4f2a160b73f0/magic/Magdir/msdos#L72)
+- configure alias, especially for .net core tools.
+- support configuration of alias as metadata of the package, so pkg authors can do that
+- support native binaries, or .net with a target os/runtimes (for native dll)
+- support native binaries splitted in multiple packages (runtimes.json in nupkg?) to minimize donwload size at restore
