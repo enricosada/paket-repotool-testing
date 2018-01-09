@@ -152,7 +152,7 @@ paket-files\bin\myhello
 
 in the example, the `myhello` tool will now use .net core.
 
-if you cat the `paket-files\bin\mytool.cmd` will be:
+if you cat the `paket-files\bin\myhello.cmd` will be:
 
 ```bat
 dotnet "%~dp0..\..\packages\myhello\tools\netcoreapp2.0\myhello.dll" %*
