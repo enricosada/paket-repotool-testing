@@ -237,6 +237,7 @@ the [X] are fixed
 - [X] discover .net core tools based on `mytool.deps.json` file
 - ~search the nupkg for tool at `install` step, write relative path found in `paket.lock`. at `restore` step, just write down the wrappers~ no need, assume strategy is stable.
 - [ ] shell scripts don't work on git-bash on windows, because try to run mono. check `ComSpec` env var if is win (ref [so](https://stackoverflow.com/a/18790824/))
+- [ ] using `storage:none` and proj in another drive, the shell script are wrong in WLS
 
 <a name="raw-ideas"></a>
 ## RAW ideas
