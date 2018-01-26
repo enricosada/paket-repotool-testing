@@ -228,7 +228,7 @@ works, same as example 4
 a scenario good to later set `FscToolPath`/`FscToolExe` to configure the msbuild compilation
 
 <a name="example-add-tool-command"></a>
-### 5 - use paket add-tool command
+### 6 - use paket add-tool command
 
 Like the `paket add` command who add nupkg, the `add-tool` command:
 
