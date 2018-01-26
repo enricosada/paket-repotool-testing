@@ -9,6 +9,7 @@ this is the WIP of the PR https://github.com/fsprojects/Paket/pull/2938
   - [3 - Multi runtimes (.net core and .net)](#example-multiple-runtimes)
   - [4 - type full path is annoying, use the PATH](#example-use-PATH)
   - [5 - change the PATH is annoying, use the helper script](#example-use-PATH-with-helper-script)
+  - [6 - use paket add-tool command](#example-add-tool-command)
 - [KNOWN BUGS or NOT IMPLEMENTED YET](#known-bugs)
   - [RAW ideas](#raw-ideas)
 - [How works - more info](#how-works-more-info)
@@ -226,6 +227,29 @@ works, same as example 4
 
 a scenario good to later set `FscToolPath`/`FscToolExe` to configure the msbuild compilation
 
+<a name="example-add-tool-command"></a>
+### 5 - use paket add-tool command
+
+Like the `paket add` command who add nupkg, the `add-tool` command:
+
+- add tools in `paket.dependencies`
+- resolve, restore and install it
+
+usual flags to configure behavior (`--no-install`,etc)
+
+```
+.paket\paket add-tool NUnit.ConsoleRunner
+```
+
+After that
+
+```
+paket-files\bin\nunit3-console --version
+```
+
+both `paket.dependencies` and `paket.lock` are updated with that tool
+
+
 <a name="known-bugs"></a>
 ## KNOWN BUGS or NOT IMPLEMENTED YET
 
@@ -238,11 +262,11 @@ the [X] are fixed
 - ~search the nupkg for tool at `install` step, write relative path found in `paket.lock`. at `restore` step, just write down the wrappers~ no need, assume strategy is stable.
 - [ ] shell scripts don't work on git-bash on windows, because try to run mono. check `ComSpec` env var if is win (ref [so](https://stackoverflow.com/a/18790824/))
 - [ ] using `storage:none` and proj in another drive, the shell script are wrong in WLS
+- [X] `paket add-tool FSharp.Compiler.Tools` (like `add` command) to add as `repotool` in deps, and install it now
 
 <a name="raw-ideas"></a>
 ## RAW ideas
 
-- `paket add-tool FSharp.Compiler.Tools` (like `add` command) to add as `repotool` in deps, and install it now
 - use native wrappers instead of shell scripts
 - `paket run mytool` (npm-like) or `paket mytool` (dotnetcli like) or `paket exec mytool` (bundler like) who will  just invoke `paket-files\bin\mytool`. ask to install if not already installed
 - kill the child tool it if parent process (the script) is termined
