@@ -79,7 +79,7 @@ See also [How works - more info](#how-works-more-info)
 | Dotnet cli global tools |      |     X     |         X      |        X          |          |                    | X |
 | console in tools dir of nupkg | X |  | X | | X | | |
 
-NOTE Dotnet cli global tools are wip in .net core sdk 2.2 so may change. Repo tools will allow to consume these packages too
+NOTE Dotnet cli global tools are wip in .net core sdk v2.1 so may change, [more info here](https://dasmulli.blog/2018/01/23/exploring-global-net-core-tools/) Repo tools will allow to consume these packages too
 NOTE The dotnet cli tool require the working directory to be the same of the project where is specified (the .csproj/.fsproj)
 NOTE the `Xplat CLI` mean the same invocation string can be used for all os in shell (no need to think about mono on osx/unix for example)
 
